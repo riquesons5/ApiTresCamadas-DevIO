@@ -21,15 +21,20 @@ namespace DevIO.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //foreach (var property in modelBuilder.Model.GetEntityTypes()
-            //             .SelectMany(e => e.GetProperties()
-            //                 .Where(p => p.ClrType == typeof(string))))
-            //    property.SetColumnType("varchar(100)");
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                         .SelectMany(e => e.GetProperties()
+                             .Where(p => p.ClrType == typeof(string))))
+                property.SetColumnType("varchar(100)");
 
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(MeuDbContext).Assembly);
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                         .SelectMany(e => e.GetProperties()
+                             .Where(p => p.ClrType == typeof(decimal))))
+                property.SetColumnType("decimal(18, 2)");
 
-            //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            //    relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MeuDbContext).Assembly);
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+                relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
             base.OnModelCreating(modelBuilder);
         }

@@ -11,7 +11,7 @@ namespace DevIO.Business.Services
         private readonly IProdutoRepository _produtoRepository;
 
         public ProdutoService(IProdutoRepository produtoRepository,
-                               INotificador notificador) : base(notificador)
+                              INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
         }
@@ -26,6 +26,14 @@ namespace DevIO.Business.Services
         public async Task Atualizar(Produto produto)
         {
             if (!ExecutarValidacao(new ProdutoValidation(), produto)) return;
+
+            var produtoExistente = _produtoRepository.ObterPorId(produto.Id);
+
+            if (produtoExistente != null)
+            {
+                Notificar("Já existe um produto com ID informado");
+                return;
+            }
 
             await _produtoRepository.Atualizar(produto);
         }
